@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo Pháp Luật & Đời Sống - Tin tức 24h mới nhất</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="container">
+            <span>Chủ Nhật, ngày 21 tháng 6, 2026</span>
+            <span>Hotline: 0909.xxx.xxx</span>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <div class="container">
+            <h1 class="logo"><a href="#">PHÁP LUẬT <span>& ĐỜI SỐNG</span></a></h1>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <ul>
+                <li><a href="#" class="active">Trang chủ</a></li>
+                <li><a href="#">Thời sự</a></li>
+                <li><a href="#">Pháp luật</a></li>
+                <li><a href="#">Kinh doanh</a></li>
+                <li><a href="#">Đời sống</a></li>
+                <li><a href="#">Xã hội</a></li>
+                <li><a href="#">Giải trí</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container main-layout">
+        
+        <section class="content-area">
+            
+            <div class="featured-news">
+                <div class="main-story">
+                    <img src="https://via.placeholder.com/600x400" alt="Tin tức pháp luật">
+                    <h2><a href="#">Nghị quyết mới về thắt chặt quản lý an toàn giao thông đô thị có hiệu lực</a></h2>
+                    <p class="summary">Từ ngày 1/7, các chế tài xử phạt vi phạm hành chính trong lĩnh vực giao thông đường bộ sẽ tăng mạnh nhằm răn đe...</p>
+                </div>
+                <div class="sub-stories">
+                    <div class="sub-item">
+                        <img src="https://via.placeholder.com/150x100" alt="Tin phụ">
+                        <h4><a href="#">Phiên tòa xét xử đại án kinh tế quy mô lớn tại TP.HCM</a></h4>
+                    </div>
+                    <div class="sub-item">
+                        <img src="https://via.placeholder.com/150x100" alt="Tin phụ">
+                        <h4><a href="#">Cảnh báo chiêu trò lừa đảo công nghệ cao mùa cuối năm</a></h4>
+                    </div>
+                    <div class="sub-item">
+                        <img src="https://via.placeholder.com/150x100" alt="Tin phụ">
+                        <h4><a href="#">Lan tỏa câu chuyện tử tế: Người đàn ông trả lại 200 triệu đồng</a></h4>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="category-block">
+                <h3 class="cat-title"><span>Pháp luật</span></h3>
+                <div class="cat-grid">
+                    <div class="cat-item">
+                        <img src="https://via.placeholder.com/280x180" alt="Tin pháp luật">
+                        <h4><a href="#">Triệt phá đường dây buôn lậu qua biên giới quy mô khủng</a></h4>
+                    </div>
+                    <div class="cat-item">
+                        <img src="https://via.placeholder.com/280x180" alt="Tin pháp luật">
+                        <h4><a href="#">Tư vấn luật: Quy định mới về thừa kế đất đai hộ gia đình</a></h4>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <aside class="sidebar">
+            <div class="widget">
+                <h3 class="widget-title">Đọc nhiều nhất</h3>
+                <ol class="trending-list">
+                    <li><a href="#">Mức phạt mới nhất đối với hành vi nồng độ cồn năm 2026</a></li>
+                    <li><a href="#">Góc khuất sau vụ án tranh chấp tài sản triệu đô tại Hà Nội</a></li>
+                    <li><a href="#">Cách phòng tránh sập bẫy "việc nhẹ lương cao" trên mạng xã hội</a></li>
+                    <li><a href="#">Thủ tục đăng ký tạm trú online nhanh nhất hiện nay</a></li>
+                </ol>
+            </div>
+
+            <div class="widget-ads">
+                <img src="https://via.placeholder.com/300x250" alt="Quảng cáo">
+            </div>
+        </aside>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p><strong>BÁO PHÁP LUẬT & ĐỜI SỐNG - KÊNH THÔNG TIN TỔNG HỢP</strong></p>
+            <p>Giấy phép số: xxx/GP-BTTTT cấp ngày... Bộ Thông tin và Truyền thông.</p>
+            <p>© Copyright 2026 - Ghi rõ nguồn "Pháp luật & Đời sống" khi phát hành lại thông tin.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
