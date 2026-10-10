@@ -3,7 +3,7 @@ import requests
 
 app = Flask(__name__)
 
-BOT_TOKEN = "2113543425188211580:RXGnBdzXejYgttFkksUOmsNOpkHjVuPfllTtTafwKUOtZwurofvVOMZPB SxEXUWu"
+BOT_TOKEN = "2113543425188211580:RXGnBdzXejYgttFkksUOmsNOpkHjVuPfllTtTafwKUOtZwurofvVOMZPBSxEXUWu"
 SECRET_TOKEN = "NhanDanGenZ_2026"
 ZALO_API = "https://api.zaloapp.com/v3/bot/message"
 
