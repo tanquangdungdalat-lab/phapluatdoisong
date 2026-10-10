@@ -7,7 +7,7 @@ BOT_TOKEN = "2113543425188211580:RXGnBdzXejYgttFkksUOmsNOpkHjVuPfllTtTafwKUOtZwu
 SECRET_TOKEN = "NhanDanGenZ_2026"
 
 # ✅ Dùng link chính thức này
-ZALO_API = "https://openapi.zalo.me/v3.0/bot/message"
+ZALO_API = "https://bot.zaloapp.com/v3/message"
 
 @app.route('/')
 def home():
