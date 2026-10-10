@@ -1,10 +1,13 @@
+from flask import Flask, request, jsonify
 import requests
 
 app = Flask(__name__)
 
 BOT_TOKEN = "2113543425188211580:RXGnBdzXejYgttFkksUOmsNOpkHjVuPfllTtTafwKUOtZwurofvVOMZPBSxEXUWu"
 SECRET_TOKEN = "NhanDanGenZ_2026"
-ZALO_API = "https://bot.zaloapp.com/v3/message"
+
+# ✅ Dùng link chính thức này
+ZALO_API = "https://openapi.zalo.me/v3.0/bot/message"
 
 @app.route('/')
 def home():
@@ -29,19 +32,22 @@ Cùng nhau học hỏi và chia sẻ kiến thức nhé! ✨"""
         
         send_message(group_id, "group", welcome_msg)
     
-    return jsonify({"status": "ok"})
+    return jsonify({"status": "ok"}), 200
 
 def send_message(recipient_id, recipient_type, message_text):
-    headers = {
-        "Authorization": f"Bearer {BOT_TOKEN}",
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "recipient": {"id": recipient_id, "type": recipient_type},
-        "message": {"text": message_text}
-    }
-    requests.post(ZALO_API, json=payload, headers=headers)
+    try:
+        headers = {
+            "Authorization": f"Bearer {BOT_TOKEN}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "recipient": {"id": recipient_id, "type": recipient_type},
+            "message": {"text": message_text}
+        }
+        response = requests.post(ZALO_API, json=payload, headers=headers)
+        print(f"📤 Gửi tin nhắn: {response.status_code} - {response.text}")
+    except Exception as e:
+        print(f"❌ Lỗi: {e}")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
-
