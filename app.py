@@ -5,7 +5,7 @@ import re
 app = Flask(__name__)
 
 BOT_TOKEN = "3459394312848419962:MZvPFwyyZsIVdothLruSruVQCUuAZAjfqmbmFFBgdBbmtqsJzOQTTTvfzlBYDQOG"
-ZALO_API = "https://openapi.zalo.me/v2.0/bot/message"
+ZALO_API = "https://api.zaloapp.com/v2/message"
 
 violation_count = {}
 MAX_VIOLATION = 3
