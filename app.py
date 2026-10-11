@@ -4,8 +4,11 @@ import re
 
 app = Flask(__name__)
 
+# === THÔNG TIN BOT ===
 BOT_TOKEN = "3459394312848419962:MZvPFwyyZsIVdothLruSruVQCUuAZAjfqmbmFFBgdBbmtqsJzOQTTTvfzlBYDQOG"
-ZALO_API = "https://bots.zaloapp.com/v1/message"
+ZALO_API = "https://openapi.zalo.me/v2.0/oa/message"
+
+# === DANH SÁCH QUẢN LÝ VI PHẠM ===
 violation_count = {}
 MAX_VIOLATION = 3
 
@@ -15,10 +18,12 @@ BAD_WORDS = [
 ]
 LINK_PATTERN = re.compile(r'(https?://|www\.|t\.me/|zalo\.me/|bit\.ly/)', re.IGNORECASE)
 
+# === TRANG CHỦ ===
 @app.route('/')
 def home():
-    return "✅ Bot đang hoạt động!"
+    return "✅ Bot Nhân Dân GenZ đang hoạt động!"
 
+# === NHẬN TIN NHẮN TỪ ZALO ===
 @app.route('/webhook', methods=['POST'])
 def webhook():
     data = request.json
@@ -98,6 +103,7 @@ def webhook():
     
     return jsonify({"status": "success"}), 200
 
+# === HÀM GỬI TIN NHẮN VỀ ZALO ===
 def send_message(recipient_id, message_text):
     try:
         headers = {
