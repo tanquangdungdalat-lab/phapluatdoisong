@@ -5,7 +5,7 @@ import re
 app = Flask(__name__)
 
 BOT_TOKEN = "2113543425188211580:RXGnBdzXejYgttFkksUOmsNOpkHjVuPfllTtTafwKUOtZwurofvVOMZPBSxEXUWu"
-ZALO_API = "https://openapi.zalo.me/v3.0/bot/message"
+ZALO_API = "https://api.zaloapp.com/v3/message"
 
 violation_count = {}
 MAX_VIOLATION = 3
@@ -77,15 +77,15 @@ def webhook():
 🔹 /danhsach — Xem danh sách vi phạm
 🔹 /xoa [tên] — Xóa số lần vi phạm
 
-⚠️ Quy định nhóm:
+⚠️ Quy định tự động:
 🚫 Không gửi link bên ngoài
 🚫 Không gửi nội dung không phù hợp
-🔔 Vi phạm 3 lần sẽ bị đuổi!"""
+🔔 Vi phạm 3 lần sẽ bị đuổi ra khỏi nhóm!"""
                 send_message(chat_id, help_text)
             
             elif text == "/danhsach":
                 if violation_count:
-                    msg = "📋 Danh sách vi phạm:\n"
+                    msg = "📋 Danh sách số lần vi phạm:\n"
                     for uid, cnt in violation_count.items():
                         short_id = uid[-6:] if len(uid) > 6 else uid
                         msg += f"• Thành viên {short_id}: {cnt} lần\n"
