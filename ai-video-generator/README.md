@@ -1,56 +1,60 @@
 # AI Video Generator Module
 
-Module độc lập minh họa quy trình tạo video tin tức, không thay đổi ứng dụng Flask hiện có ở thư mục gốc.
+Standalone video generation module for the news site. It does not modify the existing Flask application.
 
-## Thành phần
+## Services and access
 
-- Frontend Next.js: <http://localhost:3005>
-- FastAPI và Swagger UI: <http://localhost:8005> và <http://localhost:8005/docs>
-- Celery worker: xử lý tác vụ nền, giới hạn một tác vụ đồng thời để phù hợp với một GPU.
-- Redis: broker và backend kết quả, chỉ bind ra localhost ở cổng `6380`.
+- Web UI: <http://localhost:3005>
+- FastAPI / Swagger: <http://localhost:8005> / <http://localhost:8005/docs>
+- MinIO Console: <http://localhost:9001>
+- MinIO S3 endpoint: <http://localhost:9000>
+- PostgreSQL: host port `5433` (internal service name `postgres:5432`)
+- Redis: host port `6380` (internal service name `redis:6379`)
 
-## Yêu cầu
+## Requirements
 
-Cần Docker Engine và Docker Compose plugin (`docker compose`).
+Install Docker Engine and Docker Compose plugin. For real rendering, run ComfyUI on an NVIDIA GPU host, install a compatible video-generation workflow/model and make its HTTP API reachable from Docker worker.
 
-## Chạy thử
+## Configure and start
 
 ```bash
 cd ai-video-generator
+cp .env.example .env
+```
+
+Edit `.env` and replace both placeholder passwords with long, unique random values. Do not commit `.env`. Then start:
+
+```bash
 docker compose up --build -d
 docker compose ps
 ```
 
-Mở <http://localhost:3005>, nhập tiêu đề/nội dung, chọn tỉ lệ và tạo tác vụ. Xem API tại <http://localhost:8005/docs>.
+Open the UI at <http://localhost:3005>, API docs at <http://localhost:8005/docs>, and MinIO console at <http://localhost:9001>. Log in to MinIO using the values in `.env`; the `ai-videos` bucket is created automatically. The local sample credentials shown in `.env.example` are placeholders and must be replaced.
 
-Dừng dịch vụ:
+Stop services with `docker compose down`. To remove all local data as well, use `docker compose down -v` (this permanently deletes Postgres, Redis, and MinIO data).
 
-```bash
-docker compose down
-```
+## Enable real ComfyUI rendering
 
-Dừng và xóa cả dữ liệu Redis:
+1. Start ComfyUI on the GPU machine with its HTTP server enabled (normally port `8188`).
+2. In `.env`, set `COMFYUI_URL` to an address reachable from the worker. On Docker Desktop, `http://host.docker.internal:8188` is typically suitable. Linux Compose maps `host.docker.internal` to the host gateway. If ComfyUI is on another machine, use its reachable private IP/hostname instead.
+3. In ComfyUI, construct and test a prompt-to-video workflow compatible with the installed model and video nodes. Export it using **Save (API Format)** and save the exported JSON as `workflows/news-video-api.json`.
+4. In that API-format workflow, set the prompt input to `{{PROMPT}}` (or use `{{TITLE}}` / `{{CONTENT}}`), width and height inputs to `{{WIDTH}}` and `{{HEIGHT}}`, and optionally seed to `{{SEED}}`. Ensure the workflow includes an output node that emits a video file such as MP4/WebM/MOV/MKV. The illustrative JSON in `workflows/README-workflow-template.json` is not a ready Wan/Hunyuan workflow; use the API JSON exported by your installed ComfyUI nodes/model.
+5. Restart/rebuild the worker after adding the workflow: `docker compose up --build -d worker`.
 
-```bash
-docker compose down -v
-```
+The task fails clearly if ComfyUI or the workflow file is missing; there is no misleading demo video fallback. Rendered video output is downloaded from ComfyUI and uploaded to the MinIO bucket. The API result includes a presigned URL valid for 24 hours.
+
+For access from another computer, set `S3_PUBLIC_ENDPOINT_URL` to an address that browser can reach, e.g. `http://<server-ip>:9000`; configure DNS/HTTPS and secure MinIO with a reverse proxy before public deployment. Do not expose MinIO or its console directly to the Internet.
 
 ## API
 
-- `POST /api/v1/videos/generate` nhận `{ "title": "...", "content": "...", "aspect_ratio": "16:9" }` và trả mã tác vụ.
-- `GET /api/v1/videos/status/{task_id}` trả trạng thái, tiến độ hoặc kết quả.
-- `GET /health` kiểm tra API.
+- `POST /api/v1/videos/generate`: `{ "title": "...", "content": "...", "aspect_ratio": "16:9" }`
+- `GET /api/v1/videos/status/{task_id}`
+- `GET /health`
 
-Chỉ chấp nhận tỉ lệ `16:9` và `9:16`; tiêu đề tối đa 200 ký tự, nội dung tối đa 20.000 ký tự.
+Only `16:9` and `9:16` aspect ratios are accepted. Title length is limited to 200 characters and content to 20,000 characters.
 
-## Giới hạn hiện tại và triển khai model thật
+## Data and production limitations
 
-Đây là MVP chạy được để kiểm tra luồng giao diện → API → Redis/Celery → kết quả. Worker hiện **giả lập** xử lý bằng thời gian chờ và trả một video mẫu; video đó không được tạo từ nội dung gửi lên. Module chưa kết nối ComfyUI/Wan/Hunyuan, chưa lưu video lên S3/MinIO và chưa có đăng nhập, phân quyền, giới hạn chi phí hay lưu lịch sử bền vững. Không triển khai công khai như dịch vụ sản xuất trước khi bổ sung các phần này và cấu hình HTTPS, xác thực, giới hạn tài nguyên, giám sát, chính sách lưu dữ liệu và kiểm thử.
+PostgreSQL and MinIO are provisioned by Compose; current task state/results are managed by Celery/Redis and PostgreSQL is not yet used by the API for history. Add database migrations and access control before relying on it for application data. This deployment also needs HTTPS, API authentication/authorization, rate limiting, backup/retention policies, monitoring, and GPU/model-specific performance testing before public production use.
 
-Để nối model thật, thay các bước demo trong `backend/worker.py` bằng tích hợp provider/ComfyUI có timeout và xử lý lỗi; lưu file đầu ra vào object storage rồi trả URL có kiểm soát truy cập. Cấu hình GPU/model phụ thuộc môi trường máy chạy worker và cần kiểm thử riêng.
-
-## Cấu hình
-
-Có thể đặt `CORS_ORIGINS` thành danh sách origin cách nhau bằng dấu phẩy khi chạy Compose, ví dụ `CORS_ORIGINS=https://your-domain.example`. `NEXT_PUBLIC_API_URL` là URL API mà trình duyệt người dùng có thể truy cập; giá trị được đưa vào lúc build frontend. Không đặt secret hoặc API key vào biến `NEXT_PUBLIC_*`.
-
-Redis không được công bố ra mạng ngoài. Backend hiện được công bố trên cổng `8005`; nên đặt reverse proxy HTTPS và bảo vệ API bằng xác thực trước khi mở rộng ra Internet.
+`DATABASE_URL` is passed to the backend for future persistence integration. MinIO uses the root credentials for the local MVP; production should use a scoped service account and secret manager.
